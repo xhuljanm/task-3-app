@@ -1,0 +1,19 @@
+<div class="card">
+	<div class="card-header text-center">
+		Welcome,
+		{{ user?.name }}!
+	</div>
+	<div class="card-body">
+		<blockquote class="blockquote mb-0 text-center">
+			<p>This is the dashboard page. Here is some info about your account:</p>
+			<dl>
+			  <dt>Email:</dt>
+			  <dd>{{ user?.email }}</dd>
+			  <dt>Account ID:</dt>
+			  <dd>{{ user?.id }}</dd>
+			  <dt>Created At:</dt>
+			  <dd>{{ user?.createdAt }}</dd>
+			</dl>
+		  </blockquote>
+	</div>
+</div>

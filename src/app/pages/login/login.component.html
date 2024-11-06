@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center">
+	<div class="card" style="width: 26rem;">
+		<div class="card-body">
+			<h5 class="card-title text-center">Login</h5>
+			<form [formGroup]="form" (submit)="onSubmit()">
+				<div class="alert alert-success mb-3" *ngIf="successRegister">
+					<small>Registered successfully</small>
+				</div>
+				<div class="mb-3">
+					<label for="email" class="form-label">Email</label>
+					<input type="email" class="form-control" formControlName="email" placeholder="Email">
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" formControlName="password" placeholder="Password">
+				</div>
+				<div class="text-center">
+					<button type="submit" class="btn btn-primary" [disabled]="form.invalid || isLoggingIn">Login</button>
+				</div>
+
+				<hr class="mb-3 mt-3" *ngIf="showErrorMessage || showSuccessMessage" />
+				<div class="alert alert-success alert-dismissible show mb-3" role="alert" *ngIf="showSuccessMessage">
+					<small *ngIf="showSuccessMessage">
+						Login successful! Redirecting...
+					</small>
+					<button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close"></button>
+				</div>
+				<div class="alert alert-danger alert-dismissible show mb-3" role="alert" *ngIf="showErrorMessage">
+					<small>{{ errorMessage }}</small>
+					<button type="button" class="btn-close" (click)="closeAlert()" aria-label="Close"></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
