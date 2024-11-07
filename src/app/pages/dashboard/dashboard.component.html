@@ -11,6 +11,8 @@
 			  <dd>{{ user?.email }}</dd>
 			  <dt>Account ID:</dt>
 			  <dd>{{ user?.id }}</dd>
+			  <dt>Account Type:</dt>
+			  <dd>{{ user?.isAdmin ? 'Admin' : 'User' }}</dd>
 			  <dt>Created At:</dt>
 			  <dd>{{ user?.createdAt }}</dd>
 			</dl>

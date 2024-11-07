@@ -28,7 +28,8 @@ export class RegisterComponent {
 			confirmPassword: new FormControl('', [
 				Validators.required,
 				Validators.minLength(8)
-			])
+			]),
+			isAdmin: new FormControl(false)
 		}, { validators: this.passwordMatchValidator });
 	}
 

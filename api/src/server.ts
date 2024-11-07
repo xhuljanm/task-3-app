@@ -49,17 +49,31 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/login', (req: Request, res: Response): any => {
-	const { email, password } = req.body;
+	const { email, password, isAdmin } = req.body;
+
+	const requiredFields = [
+		{ field: email, name: 'Email' },
+		{ field: password, name: 'Password' },
+		{ field: isAdmin, name: 'isAdmin' }
+	];
+
+	for (let { field, name } of requiredFields) {
+		if (field === undefined || field === '') return res.status(400).json({ message: `${name} is required` });
+	}
 
     const { users } = readUsersFromFile();
 
 	const user = users.find((user) => user.email === email);
-
 	if (!user) return res.status(400).json({ message: 'User does not exist' });
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
-
     if (!isPasswordValid) return res.status(400).json({ message: 'Invalid credentials' });
+
+	if (isAdmin !== undefined && user.isAdmin !== isAdmin) {
+        return res.status(400).json({ // If the user tries to login as an admin but their account is not an admin
+            message: isAdmin ? "You are not an admin. Login as a normal user." : "You are not authorized to login as a normal user."
+        });
+    }
 
 	const token = generateToken(user.id);
 
@@ -72,7 +86,19 @@ app.post('/login', (req: Request, res: Response): any => {
 });
 
 app.post('/register', (req: Request, res: Response): any => {
-    const { name, email, password } = req.body;
+    const { name, email, password, isAdmin } = req.body;
+
+	const requiredFields = [
+		{ field: name, name: 'Name' },
+		{ field: email, name: 'Email' },
+		{ field: password, name: 'Password' },
+		{ field: isAdmin, name: 'isAdmin' }
+	];
+
+	for (let { field, name } of requiredFields) {
+		if (field === undefined || field === '') return res.status(400).json({ message: `${name} is required` });
+	}
+
     const { users } = readUsersFromFile();
 
     const userExists = users.some(user => user.email === email);
@@ -86,6 +112,7 @@ app.post('/register', (req: Request, res: Response): any => {
 		name,
         email,
         password: hashedPassword,
+		isAdmin: isAdmin,
 		createdAt: new Date().toISOString()
     };
 
@@ -107,6 +134,7 @@ app.get('/user', verifyToken, (req: Request, res: Response): any => {
         id: user.id,
         name: user.name,
         email: user.email,
+		isAdmin: user.isAdmin,
 		createdAt: format(new Date(user.createdAt), 'MMMM dd, yyyy, HH:mm:ss')
     });
 });
