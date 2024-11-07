@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import rateLimit from 'express-rate-limit';
 import config from "./config/config";
 import cors from 'cors';
 import path from "path";
@@ -14,6 +15,12 @@ import { User, UsersDB } from './interfaces/user.interface';
 
 const usersDBPath = path.join(__dirname, 'users', 'db.json');
 const app: Express = express();
+
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 4, // Limit to 4 requests per windowMs
+    message: 'Too many login attempts, please try again later.'
+});
 
 const readUsersFromFile = (): UsersDB => {
     try {
@@ -34,6 +41,12 @@ const saveUsersToFile = (users: User[]): void => {
     }
 };
 
+const validateRequiredFields = (fields: { field: any, name: string }[], res: Response) => {
+    for (let { field, name } of fields) {
+        if (field === undefined || field === '') return res.status(400).json({ message: `${name} is required` });
+    }
+};
+
 const passwordRegex = /(?=.*[A-Z])(?=.*\d).{8,}/;
 
 app.use(express.json());
@@ -48,18 +61,14 @@ app.get('/', (req: Request, res: Response) => {
     res.json({ message: 'API is up to date.' });
 });
 
-app.post('/login', (req: Request, res: Response): any => {
+app.post('/login', loginLimiter, (req: Request, res: Response): any => {
 	const { email, password, isAdmin } = req.body;
 
-	const requiredFields = [
-		{ field: email, name: 'Email' },
-		{ field: password, name: 'Password' },
-		{ field: isAdmin, name: 'isAdmin' }
-	];
-
-	for (let { field, name } of requiredFields) {
-		if (field === undefined || field === '') return res.status(400).json({ message: `${name} is required` });
-	}
+	validateRequiredFields([
+        { field: email, name: 'Email' },
+        { field: password, name: 'Password' },
+        { field: isAdmin, name: 'isAdmin' }
+    ], res);
 
     const { users } = readUsersFromFile();
 
@@ -88,16 +97,12 @@ app.post('/login', (req: Request, res: Response): any => {
 app.post('/register', (req: Request, res: Response): any => {
     const { name, email, password, isAdmin } = req.body;
 
-	const requiredFields = [
-		{ field: name, name: 'Name' },
-		{ field: email, name: 'Email' },
-		{ field: password, name: 'Password' },
-		{ field: isAdmin, name: 'isAdmin' }
-	];
-
-	for (let { field, name } of requiredFields) {
-		if (field === undefined || field === '') return res.status(400).json({ message: `${name} is required` });
-	}
+	validateRequiredFields([
+        { field: name, name: 'Name' },
+        { field: email, name: 'Email' },
+        { field: password, name: 'Password' },
+        { field: isAdmin, name: 'isAdmin' }
+    ], res);
 
     const { users } = readUsersFromFile();
 
