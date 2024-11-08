@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-boxes',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  templateUrl: './boxes.component.html',
-  styleUrl: './boxes.component.scss'
+	selector: 'app-boxes',
+	standalone: true,
+	imports: [CommonModule, FormsModule],
+	templateUrl: './boxes.component.html',
+	styleUrl: './boxes.component.scss'
 })
 
 export class BoxesComponent implements OnInit {

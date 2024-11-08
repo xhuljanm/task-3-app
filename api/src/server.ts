@@ -75,14 +75,14 @@ app.post('/login', loginLimiter, (req: Request, res: Response): any => {
 	const user = users.find((user) => user.email === email);
 	if (!user) return res.status(400).json({ message: 'User does not exist' });
 
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
-    if (!isPasswordValid) return res.status(400).json({ message: 'Invalid credentials' });
-
 	if (isAdmin !== undefined && user.isAdmin !== isAdmin) {
         return res.status(400).json({ // If the user tries to login as an admin but their account is not an admin
             message: isAdmin ? "You are not an admin. Login as a normal user." : "You are not authorized to login as a normal user."
         });
     }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) return res.status(400).json({ message: 'Invalid credentials' });
 
 	const token = generateToken(user.id);
 
