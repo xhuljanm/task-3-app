@@ -19,7 +19,7 @@ const app: Express = express();
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 4, // Limit to 4 requests per windowMs
-    message: 'Too many login attempts, please try again later.'
+    message: { message: 'Too many login attempts, please try again later.' }
 });
 
 const readUsersFromFile = (): UsersDB => {

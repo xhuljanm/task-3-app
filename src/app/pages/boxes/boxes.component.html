@@ -1,0 +1,15 @@
+<div class="container mt-4">
+	<div class="row mb-3 d-flex justify-content-center">
+		<div class="col-6 col-sm-4 col-md-2">
+			<input type="number" class="form-control" [(ngModel)]="addBoxesCount" placeholder="Enter number to add" />
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-primary" (click)="addSquares()">Add Boxes</button>
+		</div>
+	</div>
+	<div class="grid-container">
+		<div *ngFor="let square of squares; let i = index" class="grid-item" [class.selected]="isSelected(i)" (click)="toggleSelection(i, $event)">
+			{{ i }}
+		</div>
+	</div>
+</div>

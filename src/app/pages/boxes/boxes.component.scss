@@ -1,0 +1,31 @@
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(8, 100px);
+	grid-gap: 10px;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.grid-item {
+	width: 100px;
+	height: 100px;
+	background-color: #ddd;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	border: 2px solid #ccc;
+	transition: background-color 0.3s, transform 0.2s;
+	user-select: none;
+}
+
+.grid-item:hover {
+	background-color: #ccc;
+	transform: scale(1.05);
+}
+
+.grid-item.selected {
+	background-color: #0d6efd;
+	border-color: #5b9dff;
+	color: white;
+}
