@@ -5,6 +5,8 @@ export interface User {
     password: string;
 	isAdmin: boolean;
 	createdAt: string;
+	selectedSquares: string;
+	totalSquares: number;
 }
 
 export interface UsersDB {

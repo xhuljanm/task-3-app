@@ -55,6 +55,7 @@ app.use(cors({
 	origin: 'http://localhost:4200',  // Allow requests from your Angular app
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
 	allowedHeaders: ['Content-Type', 'Authorization'],  // Allowed headers
+	credentials: true
 }));
 
 app.get('/', (req: Request, res: Response) => {
@@ -113,13 +114,15 @@ app.post('/register', (req: Request, res: Response): any => {
 
     const hashedPassword = bcrypt.hashSync(password, 10);
     const newUser: User = {
-        id: uuidv4(),
+		id: uuidv4(),
 		name,
-        email,
-        password: hashedPassword,
+		email,
+		password: hashedPassword,
 		isAdmin: isAdmin,
-		createdAt: new Date().toISOString()
-    };
+		createdAt: new Date().toISOString(),
+		selectedSquares: '',
+		totalSquares: 100 // DEFAULT
+	};
 
     users.push(newUser);
     saveUsersToFile(users);
@@ -142,6 +145,39 @@ app.get('/user', verifyToken, (req: Request, res: Response): any => {
 		isAdmin: user.isAdmin,
 		createdAt: format(new Date(user.createdAt), 'MMMM dd, yyyy, HH:mm:ss')
     });
+});
+
+app.get('/user/getBoxInfo', verifyToken, (req: Request, res: Response): any => {
+    const { users } = readUsersFromFile();
+
+    const userId = res.locals.userId;
+    const user = users.find(user => user.id === userId);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Return the saved box info for this user
+    return res.status(200).json({
+        totalSquares: user.totalSquares,
+        selectedSquares: user.selectedSquares.split(',').map(Number)
+    });
+});
+
+app.post('/user/saveBoxInfo', verifyToken, (req: Request, res: Response): any => {
+	const { totalSquares, selectedSquares } = req.body;
+	const { users } = readUsersFromFile();
+
+	const userId = res.locals.userId;
+    const user = users.find(user => user.id === userId);
+
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Update user info with new box data
+    user.totalSquares = totalSquares;
+    user.selectedSquares = Array.from(selectedSquares).join(', '); // Convert Set to Array for storage
+
+    saveUsersToFile(users);
+
+    return res.status(200).json({ status: 'success', message: 'Box information saved successfully' });
 });
 
 app.get('/verify-token', verifyToken, (req: Request, res: Response): any => {
