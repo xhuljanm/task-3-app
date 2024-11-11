@@ -7,6 +7,14 @@
 			<button class="btn btn-primary" (click)="addSquares()">Add Boxes</button>
 		</div>
 	</div>
+	<div class="row mb-3 d-flex justify-content-center">
+		<div class="col-auto">
+			<button class="btn btn-danger" (click)="saveUserSquares(true)">Reset</button>
+		</div>
+		<div class="col-auto">
+			<button class="btn btn-success" (click)="saveUserSquares(false)">Save</button>
+		</div>
+	</div>
 	<div class="grid-container">
 		<div *ngFor="let square of squares; let i = index" class="grid-item" [class.selected]="isSelected(i)" (click)="toggleSelection(i, $event)">
 			{{ i }}

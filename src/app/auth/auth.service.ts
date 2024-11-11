@@ -30,6 +30,7 @@ export class AuthService {
         const currentTime = Date.now() / 1000; // Current time in seconds
 
         if (decodedToken.exp < currentTime) {
+			console.log('token expired');
             this.logout(); // Token expired, log the user out
             return of(false); // Return false if expired
         }
@@ -72,7 +73,10 @@ export class AuthService {
 
     // API request to verify the token
     private verifyToken(token: string): Observable<{ isValid: boolean }> {
-		const headers = { Authorization: `Bearer ${token}` };  // Token sent in the Authorization header
-		return this.http.get<{ isValid: boolean }>(`${this.apiUrl}/verify-token`, { headers });
+		const headers = new HttpHeaders({
+			Authorization: `Bearer ${token}`
+		});  // Token sent in the Authorization header
+
+		return this.http.get<{ isValid: boolean }>(`${this.apiUrl}/verify-token`, { headers, withCredentials: true });
 	}
 }

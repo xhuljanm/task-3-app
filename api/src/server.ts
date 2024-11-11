@@ -163,7 +163,7 @@ app.get('/user/getBoxInfo', verifyToken, (req: Request, res: Response): any => {
 });
 
 app.post('/user/saveBoxInfo', verifyToken, (req: Request, res: Response): any => {
-	const { totalSquares, selectedSquares } = req.body;
+	const { totalSquares, selectedSquares, isReset } = req.body;
 	const { users } = readUsersFromFile();
 
 	const userId = res.locals.userId;
@@ -172,8 +172,13 @@ app.post('/user/saveBoxInfo', verifyToken, (req: Request, res: Response): any =>
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Update user info with new box data
-    user.totalSquares = totalSquares;
-    user.selectedSquares = Array.from(selectedSquares).join(', '); // Convert Set to Array for storage
+	if(isReset) {
+		user.totalSquares = 100;
+		user.selectedSquares = '';
+	} else {
+		user.totalSquares = totalSquares;
+    	user.selectedSquares = Array.from(selectedSquares).join(', '); // Convert Set to Array for storage
+	}
 
     saveUsersToFile(users);
 

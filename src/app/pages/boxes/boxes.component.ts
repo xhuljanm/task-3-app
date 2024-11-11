@@ -151,12 +151,13 @@ export class BoxesComponent implements OnInit {
 		if(this.addBoxesCount > 0) this.totalSquares += this.addBoxesCount;
 	}
 
-	saveUserSquares(): void {
+	saveUserSquares(isReset: boolean): void {
 		const selectedArray = Array.from(this.selectedSquares);
 
 		this.http.post('http://localhost:3000/user/saveBoxInfo', {
-			totalSquares: this.totalSquares,
-			selectedSquares: selectedArray
+			totalSquares: isReset ? 100 : this.totalSquares,
+			selectedSquares: isReset ? 0 : selectedArray,
+			isReset: isReset
 		}, {
 			headers: new HttpHeaders({
 				'Content-Type': 'application/json',

@@ -16,6 +16,7 @@ export const verifyToken = (req: Request, res: Response, next: NextFunction): vo
 		res.locals.userId = decoded.userId;
 		next();  // Proceed to the next middleware or route handler
     } catch (err) {
+		console.log(err);
 		if (err instanceof jwt.TokenExpiredError) res.status(401).json({ isValid:false, message: 'Token has expired' });
 		else res.status(401).json({ isValid: false, message: 'Invalid token' });
 
