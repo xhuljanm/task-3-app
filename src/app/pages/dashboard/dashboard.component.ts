@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.authService.getUser().subscribe((userData) => this.user = userData, (error) => {
+			console.log('logout dashboard', error);
 			this.authService.logout();
 			console.error('Error fetching user data', error);
 		});

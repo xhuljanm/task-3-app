@@ -35,21 +35,22 @@ export class BoxesComponent implements OnInit {
 	}
 
 	updateColumnSize(): void {
-		switch(true) {
-			case this.screenWidth <= 480:
-				this.columnSize = 2;
-				break;
-			case this.screenWidth >= 480 && this.screenWidth <= 768 :
-				this.screenWidth = 4;
-				break;
-			case this.screenWidth >= 768 && this.screenWidth <= 1024:
-				this.columnSize = 6;
-				break;
-			case this.screenWidth >= 1024:
-				this.columnSize = 8;
-				break;
+			switch(true) {
+				case this.screenWidth <= 480:
+					this.columnSize = 2;
+					break;
+				case this.screenWidth >= 480 && this.screenWidth <= 768:
+					this.columnSize = 4;
+					break;
+				case this.screenWidth >= 768 && this.screenWidth <= 1024:
+					this.columnSize = 6;
+					break;
+				case this.screenWidth >= 1024:
+					this.columnSize = 8;
+					break;
+			}
 		}
-	}
+
 
 	toggleSelection(index: number, event: MouseEvent): void {
 		const totalRows = Math.ceil(this.totalSquares / this.columnSize); // Calculate the maximum number of columns
@@ -170,6 +171,10 @@ export class BoxesComponent implements OnInit {
 			if (response) {
 				console.log('Box info saved successfully', response);
 				alert('Box info saved successfully');
+				if(isReset) {
+					this.totalSquares = 100;
+					this.selectedSquares = new Set();
+				}
 			}
 		});
 	}

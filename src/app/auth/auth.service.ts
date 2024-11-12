@@ -41,6 +41,7 @@ export class AuthService {
 				return true; // Token is valid
             } else {
 				this.isAuthenticatedSubject.next(false);
+				console.log('token invalid');
 				this.logout(); // Token is invalid, log the user out
 				return false; // Return false if the token is invalid
 			}
@@ -74,7 +75,7 @@ export class AuthService {
     // API request to verify the token
     private verifyToken(token: string): Observable<{ isValid: boolean }> {
 		const headers = new HttpHeaders({
-			Authorization: `Bearer ${token}`
+			'Authorization': `Bearer ${token}`
 		});  // Token sent in the Authorization header
 
 		return this.http.get<{ isValid: boolean }>(`${this.apiUrl}/verify-token`, { headers, withCredentials: true });

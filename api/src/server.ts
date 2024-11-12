@@ -158,7 +158,7 @@ app.get('/user/getBoxInfo', verifyToken, (req: Request, res: Response): any => {
     // Return the saved box info for this user
     return res.status(200).json({
         totalSquares: user.totalSquares,
-        selectedSquares: user.selectedSquares.split(',').map(Number)
+        selectedSquares: user.selectedSquares === '' ? [] : user.selectedSquares.split(',').map(Number)
     });
 });
 
@@ -185,7 +185,7 @@ app.post('/user/saveBoxInfo', verifyToken, (req: Request, res: Response): any =>
     return res.status(200).json({ status: 'success', message: 'Box information saved successfully' });
 });
 
-app.get('/verify-token', verifyToken, (req: Request, res: Response): any => {
+app.get('/verify-token', verifyToken, (req, res): any => {
 	return res.status(200).json({ isValid: true });
 });
 

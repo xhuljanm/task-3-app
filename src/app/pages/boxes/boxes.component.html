@@ -15,7 +15,7 @@
 			<button class="btn btn-success" (click)="saveUserSquares(false)">Save</button>
 		</div>
 	</div>
-	<div class="grid-container">
+	<div class="grid-container" [style.gridTemplateColumns]="'repeat(' + columnSize + ', 1fr)'">
 		<div *ngFor="let square of squares; let i = index" class="grid-item" [class.selected]="isSelected(i)" (click)="toggleSelection(i, $event)">
 			{{ i }}
 		</div>
